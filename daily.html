@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Soundscape & Light — Daily Challenge. New quote, rapid fire, and quiz deck every day. Build your streak.">
+  <title>Daily — S&L</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌅</text></svg>">
+</head>
+<body>
+  <div id="scroll-progress"></div>
+  <button id="back-top" aria-label="Back to top">↑</button>
+  <button id="sound-toggle" style="position:fixed;top:88px;right:1rem;z-index:9000;background:var(--surface);border:2px solid var(--border);border-radius:var(--r-full);width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;" aria-label="Toggle sound">🔊</button>
+
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="nav-logo" aria-label="S&L Home">
+      <span class="nav-logo-dot"></span><span>S&amp;L</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="playbook.html" class="nav-link">Playbook</a>
+      <a href="game.html" class="nav-link">Game</a>
+      <a href="daily.html" class="nav-link">Daily</a>
+    </div>
+    <button class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="playbook.html" class="nav-link">Playbook</a>
+    <a href="game.html" class="nav-link">Game</a>
+    <a href="daily.html" class="nav-link">Daily</a>
+  </div>
+
+  <main style="padding-top:80px">
+
+    <!-- ── DAILY HERO ──────────────────────────────────── -->
+    <section style="padding:var(--s5) 0 var(--s4);text-align:center;position:relative;overflow:hidden">
+      <canvas id="particle-canvas"></canvas>
+      <div class="container" style="position:relative;z-index:2">
+        <div class="section-label" style="justify-content:center;margin-bottom:var(--s2)">Daily Challenge</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:var(--s2);margin-bottom:var(--s2)">
+          <h1 class="t-display">Today's <span class="t-gradient">Mission</span></h1>
+        </div>
+
+        <!-- Hour theme badge -->
+        <div id="hour-theme-badge" style="display:inline-flex;align-items:center;gap:var(--s1);background:var(--surface);border:2px solid var(--border);border-radius:var(--r-full);padding:0.5rem 1.25rem;margin-bottom:var(--s3)">
+          <span id="theme-emoji" style="font-size:1.4rem">⚡</span>
+          <span id="theme-label" class="t-label" style="font-size:0.8rem">Loading theme...</span>
+        </div>
+
+        <!-- Date & streak -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:var(--s4);flex-wrap:wrap;margin-bottom:var(--s4)">
+          <div>
+            <div id="today-date" class="t-title" style="font-size:1rem;letter-spacing:-0.02em"></div>
+            <div class="t-label" style="color:var(--ink-dim)">Today's Date</div>
+          </div>
+          <div>
+            <div id="daily-streak" class="t-title" style="font-size:1rem;letter-spacing:-0.02em;color:var(--acc1)">0 🔥</div>
+            <div class="t-label" style="color:var(--ink-dim)">Day Streak</div>
+          </div>
+          <div>
+            <div id="total-badges" class="t-title" style="font-size:1rem;letter-spacing:-0.02em;color:var(--acc5)">0 🏆</div>
+            <div class="t-label" style="color:var(--ink-dim)">Badges Earned</div>
+          </div>
+        </div>
+
+        <!-- Steps indicator -->
+        <div id="steps-strip" style="display:flex;align-items:center;justify-content:center;gap:var(--s1);flex-wrap:wrap">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MARQUEE ─────────────────────────────────────── -->
+    <div class="marquee-wrap">
+      <div class="marquee-track" id="marquee-track"></div>
+    </div>
+
+    <!-- ── DAILY COMPLETE SCREEN ──────────────────────── -->
+    <div id="screen-daily-done" style="display:none">
+      <section class="section" style="text-align:center">
+        <div class="container">
+          <div style="font-size:5rem;margin-bottom:var(--s3);animation:float 3s ease-in-out infinite">💎</div>
+          <h2 class="t-display" style="margin-bottom:var(--s2)">Challenge<br><span class="t-gradient">Complete!</span></h2>
+          <p style="color:var(--ink-mid);margin-bottom:var(--s4)">You've crushed today's daily challenge. Come back tomorrow for a new one.</p>
+
+          <!-- Today's results summary -->
+          <div id="today-results" style="max-width:500px;margin:0 auto var(--s4)"></div>
+
+          <!-- Badges earned today -->
+          <div id="today-badges" style="margin-bottom:var(--s4)"></div>
+
+          <div style="display:flex;gap:var(--s2);justify-content:center;flex-wrap:wrap">
+            <a href="game.html" class="btn btn-accent btn-lg btn-magnetic">⚡ Keep Playing</a>
+            <a href="playbook.html" class="btn btn-outline btn-lg">📖 Read Playbook</a>
+            <a href="index.html" class="btn btn-ghost btn-lg">🏠 Home</a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ── DAILY FLOW SCREEN ───────────────────────────── -->
+    <div id="screen-daily-flow">
+
+      <!-- ── STEP 1: QOTD ──────────────────────────────── -->
+      <section id="step-qotd" class="section daily-step" data-step="1" style="display:none">
+        <div class="container">
+          <div class="daily-step-header reveal">
+            <div style="display:inline-flex;align-items:center;gap:var(--s1);background:var(--acc5);color:var(--ink);padding:0.4rem 1rem;border-radius:var(--r-full);font-family:var(--font-display);font-weight:700;font-size:0.75rem;letter-spacing:0.1em">STEP 1 OF 3 — QUOTE</div>
+            <h2 class="t-display" style="margin-top:var(--s2)">Today's <span class="t-gradient">Wisdom</span></h2>
+          </div>
+
+          <div id="qotd-container" class="reveal"></div>
+
+          <!-- All today's quotes carousel -->
+          <div style="margin-top:var(--s4)" class="reveal">
+            <div class="t-label" style="color:var(--ink-dim);margin-bottom:var(--s2)">MORE DAILY QUOTES</div>
+            <div class="carousel-outer">
+              <div class="carousel-nav">
+                <span class="carousel-title t-label">Inspiring Quotes — Shuffled Daily</span>
+                <div style="display:flex;gap:var(--s2);align-items:center">
+                  <span class="carousel-count"></span>
+                  <div class="carousel-controls">
+                    <button class="carousel-btn" data-carousel-prev aria-label="Previous">←</button>
+                    <button class="carousel-btn" data-carousel-next aria-label="Next">→</button>
+                  </div>
+                </div>
+              </div>
+              <div class="carousel" id="quotes-carousel" role="list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+
+          <div style="text-align:center;margin-top:var(--s4)" class="reveal">
+            <button class="btn btn-primary btn-xl btn-magnetic" onclick="completeStep(1)" aria-label="Continue to Rapid Fire">
+              Next: Rapid Fire ⚡
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── STEP 2: RAPID FIRE ─────────────────────────── -->
+      <section id="step-rapid" class="section daily-step" data-step="2" style="display:none">
+        <div class="container">
+          <div class="daily-step-header">
+            <div style="display:inline-flex;align-items:center;gap:var(--s1);background:var(--acc1);color:#fff;padding:0.4rem 1rem;border-radius:var(--r-full);font-family:var(--font-display);font-weight:700;font-size:0.75rem;letter-spacing:0.1em">STEP 2 OF 3 — RAPID FIRE</div>
+            <h2 class="t-display" style="margin-top:var(--s2)">Rapid<br><span class="t-gradient">Fire Round</span></h2>
+            <p style="color:var(--ink-mid);margin-top:var(--s2)">10 True or False questions. Daily deck — same all day. 8 seconds each.</p>
+          </div>
+
+          <div id="rf-area" style="margin-top:var(--s4)">
+            <!-- Rapid fire UI populated here -->
+            <div class="quiz-wrap">
+              <div class="quiz-meta" role="status" aria-live="polite">
+                <div id="drf-counter" class="quiz-counter">Round 1 / 10</div>
+                <div style="display:flex;align-items:center;gap:var(--s2)">
+                  <div id="drf-streak-badge" style="display:none"><div class="streak-badge">🔥 <span id="drf-streak-num">0</span></div></div>
+                  <div id="drf-timer" class="quiz-timer" role="timer">8</div>
+                </div>
+              </div>
+              <div class="quiz-progress" role="progressbar">
+                <div class="quiz-progress-bar" id="drf-progress" style="width:0%"></div>
+              </div>
+              <div class="rf-card" id="drf-card" aria-live="polite">
+                <div class="card-tag rf" style="font-size:0.65rem;position:relative;z-index:1">DAILY RAPID FIRE · TRUE OR FALSE?</div>
+                <div class="rf-question" id="drf-question">Ready when you are...</div>
+                <div class="rf-tf-btns">
+                  <button class="btn btn-accent btn-lg btn-magnetic" id="drf-btn-true" onclick="answerDRF(true)" aria-label="True">✓ TRUE</button>
+                  <button class="btn btn-outline btn-lg btn-magnetic" id="drf-btn-false" onclick="answerDRF(false)" aria-label="False">✗ FALSE</button>
+                </div>
+              </div>
+              <div id="drf-explanation" style="display:none;background:var(--surface-2);border-radius:var(--r-lg);padding:var(--s2) var(--s3);margin-top:var(--s2);border-left:4px solid var(--acc1)">
+                <div class="t-label" style="margin-bottom:0.5rem">ANSWER</div>
+                <p class="t-small" id="drf-exp-text" style="color:var(--ink-mid)"></p>
+              </div>
+              <div style="text-align:center;margin-top:var(--s3);display:none" id="drf-next-wrap">
+                <button class="btn btn-primary btn-lg btn-magnetic" onclick="nextDRF()" aria-label="Next round">Next →</button>
+              </div>
+              <div id="drf-results" style="display:none;text-align:center;margin-top:var(--s3)">
+                <!-- Results after completion -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── STEP 3: DAILY QUIZ ─────────────────────────── -->
+      <section id="step-quiz" class="section daily-step" data-step="3" style="display:none">
+        <div class="container">
+          <div class="daily-step-header">
+            <div style="display:inline-flex;align-items:center;gap:var(--s1);background:var(--acc2);color:var(--ink);padding:0.4rem 1rem;border-radius:var(--r-full);font-family:var(--font-display);font-weight:700;font-size:0.75rem;letter-spacing:0.1em">STEP 3 OF 3 — QUIZ</div>
+            <h2 class="t-display" style="margin-top:var(--s2)">Daily<br><span class="t-gradient">Quiz Deck</span></h2>
+            <p style="color:var(--ink-mid);margin-top:var(--s2)">10 questions, seeded fresh each day. 15 seconds per question.</p>
+          </div>
+
+          <div id="dq-area" style="margin-top:var(--s4)">
+            <div class="quiz-wrap">
+              <div class="quiz-meta" role="status" aria-live="polite">
+                <div id="dq-counter" class="quiz-counter">Question 1 / 10</div>
+                <div style="display:flex;align-items:center;gap:var(--s2)">
+                  <div id="dq-streak-badge" style="display:none"><div class="streak-badge">🔥 <span id="dq-streak-num">0</span></div></div>
+                  <div id="dq-timer" class="quiz-timer" role="timer">15</div>
+                </div>
+              </div>
+              <div class="quiz-progress" role="progressbar">
+                <div class="quiz-progress-bar" id="dq-progress" style="width:0%"></div>
+              </div>
+              <div class="quiz-question-card" id="dq-card">
+                <div class="quiz-q-label" id="dq-category">Category</div>
+                <div class="quiz-q-text" id="dq-text">Loading...</div>
+              </div>
+              <div class="quiz-options" id="dq-options" role="group" aria-label="Answer options"></div>
+              <div id="dq-explanation" style="display:none;background:var(--surface-2);border-radius:var(--r-lg);padding:var(--s2) var(--s3);margin-top:var(--s2);border-left:4px solid var(--acc1)">
+                <div class="t-label" style="margin-bottom:0.5rem">WHY?</div>
+                <p class="t-small" id="dq-exp-text" style="color:var(--ink-mid)"></p>
+              </div>
+              <div style="text-align:center;margin-top:var(--s3);display:none" id="dq-next-wrap">
+                <button class="btn btn-primary btn-lg btn-magnetic" onclick="nextDQ()" aria-label="Next question">Next →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /screen-daily-flow -->
+
+  </main>
+
+  <footer style="background:var(--ink);color:var(--bg);padding:var(--s4) 0;" role="contentinfo">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--s2)">
+      <div class="nav-logo" style="color:var(--bg)"><span class="nav-logo-dot"></span><span>S&amp;L</span></div>
+      <div style="display:flex;gap:var(--s3)">
+        <a href="index.html" class="nav-link" style="color:rgba(245,242,237,0.7)">Home</a>
+        <a href="playbook.html" class="nav-link" style="color:rgba(245,242,237,0.7)">Playbook</a>
+        <a href="game.html" class="nav-link" style="color:rgba(245,242,237,0.7)">Game</a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast-container"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/sounds.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // ─── DAILY PAGE STATE ────────────────────────────────
+    const DAILY_LETTERS = ['A', 'B', 'C', 'D'];
+    let dailyState = { rfEngine: null, quizEngine: null, rfScore: 0, rfTotal: 10, quizScore: 0, quizTotal: 10 };
+    let currentStep = 0;
+
+    // ─── INIT ─────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      App.initParticles('particle-canvas');
+      App.buildMarquee('#marquee-track', MARQUEE_FACTS);
+      initHeroMeta();
+      renderStepsStrip();
+
+      if (Engine.isDailyDone()) {
+        showDailyComplete();
+      } else {
+        showStep(1);
+      }
+    });
+
+    function initHeroMeta() {
+      const theme = Engine.getHourTheme(HOUR_PALETTES);
+      document.getElementById('theme-emoji').textContent = theme.emoji;
+      document.getElementById('theme-label').textContent = `${theme.name} Vibes`;
+
+      const now = new Date();
+      document.getElementById('today-date').textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+      const state = Engine.StorageManager.load();
+      document.getElementById('daily-streak').textContent = `${state.dailyStreak || 0} 🔥`;
+      document.getElementById('total-badges').textContent = `${(state.earnedAchievements || []).length} 🏆`;
+    }
+
+    function renderStepsStrip() {
+      const strip = document.getElementById('steps-strip');
+      const steps = [
+        { num: 1, icon: '💬', label: 'Quote' },
+        { num: 2, icon: '⚡', label: 'Rapid Fire' },
+        { num: 3, icon: '🎯', label: 'Quiz' }
+      ];
+
+      strip.innerHTML = steps.map((s, i) => `
+        <div id="step-indicator-${s.num}" style="display:flex;align-items:center;gap:0.25rem">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:0.25rem">
+            <div class="step-dot" data-step-dot="${s.num}">
+              <span>${s.icon}</span>
+            </div>
+            <span class="t-label" style="font-size:0.6rem;color:var(--ink-dim)">${s.label}</span>
+          </div>
+          ${i < steps.length - 1 ? '<div style="width:40px;height:2px;background:var(--border);border-radius:2px;margin-bottom:1rem"></div>' : ''}
+        </div>
+      `).join('');
+    }
+
+    function updateStepsStrip(activeStep) {
+      for (let i = 1; i <= 3; i++) {
+        const dot = document.querySelector(`[data-step-dot="${i}"]`);
+        if (!dot) continue;
+        dot.className = `step-dot${i < activeStep ? ' completed' : i === activeStep ? ' active' : ''}`;
+      }
+    }
+
+    // ─── STEP MANAGEMENT ─────────────────────────────────
+    function showStep(step) {
+      currentStep = step;
+      updateStepsStrip(step);
+
+      // Hide all steps
+      document.querySelectorAll('.daily-step').forEach(s => s.style.display = 'none');
+
+      const stepEl = document.getElementById(`step-${['', 'qotd', 'rapid', 'quiz'][step]}`);
+      if (stepEl) {
+        stepEl.style.display = '';
+        setTimeout(() => stepEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+      }
+
+      if (step === 1) initStepQOTD();
+      if (step === 2) initStepRapidFire();
+      if (step === 3) initStepQuiz();
+    }
+
+    function completeStep(step) {
+      AudioEngine.play('whoosh');
+      App.showToast(`Step ${step} complete! 🎉`, 'success');
+      if (step < 3) {
+        showStep(step + 1);
+      } else {
+        finishDailyChallenge();
+      }
+    }
+
+    // ─── STEP 1: QOTD ─────────────────────────────────────
+    function initStepQOTD() {
+      App.renderQOTD('#qotd-container');
+      buildQuotesCarousel();
+      App.initCarousels();
+    }
+
+    function buildQuotesCarousel() {
+      const carousel = document.getElementById('quotes-carousel');
+      if (!carousel || carousel.children.length > 0) return;
+
+      const dailyQuotes = Engine.seededShuffle(QUOTES, Engine.getDailySeed());
+
+      dailyQuotes.forEach(q => {
+        const item = document.createElement('div');
+        item.className = 'carousel-item';
+        item.setAttribute('role', 'listitem');
+        item.innerHTML = `
+          <div class="quote-card" style="height:var(--carousel-h);display:flex;flex-direction:column;justify-content:space-between">
+            <div class="quote-icon">"</div>
+            <div class="quote-text t-body">${escHtml(q.text)}</div>
+            <div>
+              <div class="t-label" style="color:var(--acc1);margin-bottom:0.25rem">— ${escHtml(q.author)}</div>
+              <div class="card-tag ${q.category || 'lighting'}" style="font-size:0.6rem">${(q.category || '').toUpperCase()} · ${escHtml(q.source)}</div>
+            </div>
+          </div>
+        `;
+        carousel.appendChild(item);
+      });
+    }
+
+    // ─── STEP 2: RAPID FIRE ──────────────────────────────
+    function initStepRapidFire() {
+      const deck = Engine.getDailyRapidFire(RAPID_FIRE, 10);
+      dailyState.rfEngine = new Engine.RapidFireEngine(deck, { count: 10, timerPerQ: 8 });
+      renderDRF();
+    }
+
+    function renderDRF() {
+      if (!dailyState.rfEngine || dailyState.rfEngine.isFinished) { showDRFResults(); return; }
+
+      const q = dailyState.rfEngine.current;
+      document.getElementById('drf-progress').style.width = `${(dailyState.rfEngine.idx / dailyState.rfEngine.deck.length) * 100}%`;
+      document.getElementById('drf-counter').textContent = `Round ${dailyState.rfEngine.idx + 1} / ${dailyState.rfEngine.deck.length}`;
+      document.getElementById('drf-question').textContent = q.text;
+      document.getElementById('drf-explanation').style.display = 'none';
+      const nextWrap = document.getElementById('drf-next-wrap');
+      if (nextWrap) nextWrap.style.display = 'none';
+
+      const streakBadge = document.getElementById('drf-streak-badge');
+      const streakNum = document.getElementById('drf-streak-num');
+      if (dailyState.rfEngine.streak >= 2) {
+        streakBadge.style.display = '';
+        streakNum.textContent = dailyState.rfEngine.streak;
+      } else {
+        streakBadge.style.display = 'none';
+      }
+
+      const trueBtn = document.getElementById('drf-btn-true');
+      const falseBtn = document.getElementById('drf-btn-false');
+      if (trueBtn) { trueBtn.disabled = false; trueBtn.className = 'btn btn-accent btn-lg btn-magnetic'; }
+      if (falseBtn) { falseBtn.disabled = false; falseBtn.className = 'btn btn-outline btn-lg btn-magnetic'; }
+
+      dailyState.rfEngine.startTimer(
+        (t) => {
+          const timerEl = document.getElementById('drf-timer');
+          timerEl.textContent = t;
+          timerEl.classList.toggle('urgent', t <= 3);
+          if (t <= 3) AudioEngine.play('timerTick');
+        },
+        () => {
+          AudioEngine.play('timeout');
+          App.showToast('⏱️ Time\'s up!', 'fail');
+          showDRFResult(null);
+          document.getElementById('drf-next-wrap').style.display = '';
+        }
+      );
+    }
+
+    function answerDRF(bool) {
+      const result = dailyState.rfEngine.answer(bool);
+      if (!result) return;
+
+      if (result.correct) {
+        AudioEngine.play('correct');
+        App.showToast(bool ? '✓ TRUE — Correct!' : '✗ FALSE — Correct!', 'success');
+      } else {
+        AudioEngine.play('wrong');
+        App.showToast('That\'s wrong!', 'fail');
+      }
+
+      showDRFResult(result.chosen);
+      document.getElementById('drf-exp-text').innerHTML = `<strong>Answer: ${result.q.answer ? 'TRUE ✓' : 'FALSE ✗'}</strong> — ${escHtml(result.q.explanation)}`;
+      document.getElementById('drf-explanation').style.display = '';
+      document.getElementById('drf-next-wrap').style.display = '';
+    }
+
+    function showDRFResult(chosen) {
+      const trueBtn = document.getElementById('drf-btn-true');
+      const falseBtn = document.getElementById('drf-btn-false');
+      const correctAnswer = dailyState.rfEngine.current.answer;
+
+      if (trueBtn && falseBtn) {
+        trueBtn.disabled = true;
+        falseBtn.disabled = true;
+        if (correctAnswer === true) {
+          trueBtn.className = 'btn btn-lg btn-magnetic quiz-option correct';
+        } else {
+          falseBtn.className = 'btn btn-lg btn-magnetic quiz-option correct';
+          if (chosen === true) trueBtn.className = 'btn btn-lg btn-magnetic quiz-option wrong';
+        }
+      }
+    }
+
+    function nextDRF() {
+      const next = dailyState.rfEngine.next();
+      AudioEngine.play('cardFlip');
+      if (!next || dailyState.rfEngine.isFinished) {
+        showDRFResults();
+      } else {
+        renderDRF();
+      }
+    }
+
+    function showDRFResults() {
+      dailyState.rfScore = dailyState.rfEngine.score;
+      dailyState.rfTotal = dailyState.rfEngine.deck.length;
+      const pct = Math.round((dailyState.rfScore / dailyState.rfTotal) * 100);
+
+      const resultsDiv = document.getElementById('drf-results');
+      resultsDiv.style.display = '';
+      resultsDiv.innerHTML = `
+        <div style="background:var(--surface);border-radius:var(--r-xl);padding:var(--s4);margin-bottom:var(--s3)">
+          <div style="font-size:4rem;margin-bottom:var(--s2)">${pct >= 80 ? '🔥' : pct >= 60 ? '✨' : '💪'}</div>
+          <div class="t-display" style="color:var(--acc1)">${pct}%</div>
+          <div class="t-body" style="color:var(--ink-mid);margin:var(--s1) 0">${dailyState.rfScore}/${dailyState.rfTotal} correct in Rapid Fire</div>
+          <button class="btn btn-primary btn-lg btn-magnetic" onclick="completeStep(2)" style="margin-top:var(--s2)">Continue to Quiz 🎯</button>
+        </div>
+      `;
+    }
+
+    // ─── STEP 3: DAILY QUIZ ───────────────────────────────
+    function initStepQuiz() {
+      const deck = Engine.getDailyQuestions(QUESTIONS, 10);
+      dailyState.quizEngine = new Engine.QuizEngine(deck, { count: 10, timerPerQ: 15, mode: 'daily' });
+      renderDQ();
+    }
+
+    function renderDQ() {
+      if (!dailyState.quizEngine || dailyState.quizEngine.isFinished) { finishDailyChallenge(); return; }
+
+      const q = dailyState.quizEngine.current;
+      const idx = dailyState.quizEngine.idx;
+      const total = dailyState.quizEngine.deck.length;
+
+      document.getElementById('dq-progress').style.width = `${(idx / total) * 100}%`;
+      document.getElementById('dq-counter').textContent = `Question ${idx + 1} / ${total}`;
+      document.getElementById('dq-text').textContent = q.text;
+      document.getElementById('dq-category').textContent = `${q.category.toUpperCase()} · ${q.difficulty.toUpperCase()}`;
+      document.getElementById('dq-explanation').style.display = 'none';
+      const dqNext = document.getElementById('dq-next-wrap');
+      if (dqNext) dqNext.style.display = 'none';
+
+      const streakBadge = document.getElementById('dq-streak-badge');
+      const streakNum = document.getElementById('dq-streak-num');
+      if (dailyState.quizEngine.streak >= 2) {
+        streakBadge.style.display = '';
+        streakNum.textContent = dailyState.quizEngine.streak;
+      } else {
+        streakBadge.style.display = 'none';
+      }
+
+      const optContainer = document.getElementById('dq-options');
+      optContainer.innerHTML = '';
+      const shuffledOpts = Engine.shuffleArray(q.options.map((opt, i) => ({ opt, origIdx: i })));
+
+      shuffledOpts.forEach(({ opt, origIdx }, displayIdx) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-option';
+        btn.dataset.origIdx = origIdx;
+        btn.setAttribute('data-letter', DAILY_LETTERS[displayIdx]);
+        btn.textContent = opt;
+        btn.setAttribute('aria-label', `Option ${DAILY_LETTERS[displayIdx]}: ${opt}`);
+        btn.addEventListener('click', () => answerDQ(origIdx, btn, shuffledOpts));
+        optContainer.appendChild(btn);
+      });
+
+      dailyState.quizEngine.startTimer(
+        (t) => {
+          const timerEl = document.getElementById('dq-timer');
+          timerEl.textContent = t;
+          timerEl.classList.toggle('urgent', t <= 4);
+          if (t <= 4) AudioEngine.play('timerTick');
+        },
+        () => {
+          AudioEngine.play('timeout');
+          App.showToast('⏱️ Time\'s up!', 'fail');
+          revealDQAnswer(null, shuffledOpts);
+          document.getElementById('dq-next-wrap').style.display = '';
+        }
+      );
+    }
+
+    function answerDQ(choiceIdx, btn, shuffledOpts) {
+      const result = dailyState.quizEngine.answer(choiceIdx);
+      if (!result) return;
+
+      if (result.correct) {
+        AudioEngine.play('correct');
+        App.showToast('✓ Correct!', 'success');
+      } else {
+        AudioEngine.play('wrong');
+        App.showToast('✗ Wrong!', 'fail');
+      }
+
+      revealDQAnswer(choiceIdx, shuffledOpts);
+      document.getElementById('dq-exp-text').textContent = result.q.explanation;
+      document.getElementById('dq-explanation').style.display = '';
+      document.getElementById('dq-next-wrap').style.display = '';
+    }
+
+    function revealDQAnswer(chosenIdx, shuffledOpts) {
+      const optContainer = document.getElementById('dq-options');
+      optContainer.querySelectorAll('.quiz-option').forEach(btn => {
+        const origIdx = parseInt(btn.dataset.origIdx);
+        btn.disabled = true;
+        if (origIdx === dailyState.quizEngine.current.correct) {
+          btn.classList.add('correct');
+        } else if (origIdx === chosenIdx) {
+          btn.classList.add('wrong');
+        }
+      });
+    }
+
+    function nextDQ() {
+      const next = dailyState.quizEngine.next();
+      AudioEngine.play('cardFlip');
+      if (!next || dailyState.quizEngine.isFinished) {
+        finishDailyChallenge();
+      } else {
+        renderDQ();
+      }
+    }
+
+    // ─── FINISH DAILY ─────────────────────────────────────
+    function finishDailyChallenge() {
+      // Gather quiz stats
+      const quizStats = dailyState.quizEngine ? dailyState.quizEngine.getStats() : { score: 0, total: 10, pct: 0 };
+      dailyState.quizScore = quizStats.score;
+      dailyState.quizTotal = quizStats.total;
+
+      // Combine totals
+      const totalCorrect = dailyState.rfScore + dailyState.quizScore;
+      const totalQ = dailyState.rfTotal + dailyState.quizTotal;
+
+      // Update storage
+      const { updated, newAchievements } = Engine.applyQuizResults({
+        ...quizStats,
+        mode: 'daily'
+      });
+
+      // Mark daily done
+      Engine.markDailyDone();
+
+      // Update streak
+      const state = Engine.StorageManager.load();
+      const lastDate = state.lastDailyDate;
+      const today = new Date().toDateString();
+      let streak = state.dailyStreak || 0;
+      if (lastDate === new Date(Date.now() - 86400000).toDateString()) {
+        streak++;
+      } else if (lastDate !== today) {
+        streak = 1;
+      }
+      Engine.StorageManager.update({ dailyStreak: streak, lastDailyDate: today });
+
+      AudioEngine.play('resultPerfect');
+      showDailyComplete(totalCorrect, totalQ, newAchievements);
+    }
+
+    // ─── SHOW COMPLETE SCREEN ─────────────────────────────
+    function showDailyComplete(totalCorrect, totalQ, newAchievements) {
+      document.getElementById('screen-daily-flow').style.display = 'none';
+      const doneScreen = document.getElementById('screen-daily-done');
+      doneScreen.style.display = '';
+      updateStepsStrip(4);
+
+      if (totalCorrect !== undefined && totalQ !== undefined) {
+        const pct = Math.round((totalCorrect / totalQ) * 100);
+        const resultsDiv = document.getElementById('today-results');
+        resultsDiv.innerHTML = `
+          <div style="display:flex;gap:var(--s3);justify-content:center;flex-wrap:wrap;margin-bottom:var(--s3)">
+            <div style="text-align:center;padding:var(--s2) var(--s3);background:var(--surface);border:2px solid var(--border);border-radius:var(--r-lg)">
+              <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:800;color:var(--acc1)">${pct}%</div>
+              <div class="t-label" style="color:var(--ink-dim)">Overall Score</div>
+            </div>
+            <div style="text-align:center;padding:var(--s2) var(--s3);background:var(--surface);border:2px solid var(--border);border-radius:var(--r-lg)">
+              <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:800;color:var(--acc2)">${dailyState.rfScore}/${dailyState.rfTotal}</div>
+              <div class="t-label" style="color:var(--ink-dim)">Rapid Fire</div>
+            </div>
+            <div style="text-align:center;padding:var(--s2) var(--s3);background:var(--surface);border:2px solid var(--border);border-radius:var(--r-lg)">
+              <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:800;color:var(--acc3)">${dailyState.quizScore}/${dailyState.quizTotal}</div>
+              <div class="t-label" style="color:var(--ink-dim)">Quiz</div>
+            </div>
+          </div>
+        `;
+      }
+
+      // New achievements
+      if (newAchievements && newAchievements.length > 0) {
+        const badgesDiv = document.getElementById('today-badges');
+        badgesDiv.innerHTML = `
+          <div class="t-label" style="margin-bottom:var(--s2);text-align:center;color:var(--acc1)">🏆 NEW BADGES!</div>
+          <div style="display:flex;gap:var(--s2);justify-content:center;flex-wrap:wrap">
+            ${newAchievements.map(a => `
+              <div class="badge earned" title="${escHtml(a.desc)}">
+                <div class="badge-icon">${a.icon}</div>
+                <span class="badge-name">${escHtml(a.name)}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        App.showToast(`🏆 ${newAchievements[0].name} unlocked!`, 'success');
+      }
+
+      doneScreen.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function escHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+  </script>
+</body>
+</html>

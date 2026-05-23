@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Soundscape & Light Playbook — Full content from L1, L2, S1, and additions. Lighting and Live Sound professional reference.">
+  <title>Playbook — S&L</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+</head>
+<body>
+  <div id="scroll-progress"></div>
+  <button id="back-top" aria-label="Back to top">↑</button>
+  <button id="sound-toggle" style="position:fixed;top:88px;right:1rem;z-index:9000;background:var(--surface);border:2px solid var(--border);border-radius:var(--r-full);width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;" aria-label="Toggle sound">🔊</button>
+
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="nav-logo" aria-label="S&L Home">
+      <span class="nav-logo-dot"></span><span>S&amp;L</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="playbook.html" class="nav-link">Playbook</a>
+      <a href="game.html" class="nav-link">Game</a>
+      <a href="daily.html" class="nav-link">Daily</a>
+    </div>
+    <button class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="playbook.html" class="nav-link">Playbook</a>
+    <a href="game.html" class="nav-link">Game</a>
+    <a href="daily.html" class="nav-link">Daily</a>
+  </div>
+
+  <!-- Page Header -->
+  <div class="page-header" style="border-bottom:none;padding-bottom:0">
+    <div class="container">
+      <div class="section-label">Full Reference</div>
+      <h1 class="t-display">The <span class="t-gradient">Playbook</span></h1>
+      <p style="color:var(--ink-mid);max-width:600px;margin-top:var(--s2)">Every section from the Lighting Playbook, Live Sound Playbook, WMAS, Immersive Audio & Personal Monitoring guides — word for word.</p>
+    </div>
+  </div>
+
+  <!-- Filter Tags -->
+  <div style="border-bottom:1px solid var(--border);padding:var(--s2) 0;position:sticky;top:64px;z-index:900;background:rgba(245,242,237,0.95);backdrop-filter:blur(16px)">
+    <div class="container">
+      <div class="filter-row">
+        <div class="tag-cloud" role="group" aria-label="Filter by category">
+          <button class="tag active" data-filter="all" onclick="filterContent('all')">All</button>
+          <button class="tag" data-filter="lighting" onclick="filterContent('lighting')">💡 Lighting</button>
+          <button class="tag" data-filter="sound" onclick="filterContent('sound')">🔊 Sound</button>
+          <button class="tag" data-filter="rf" onclick="filterContent('rf')">📡 RF / WMAS</button>
+          <button class="tag" data-filter="advanced" onclick="filterContent('advanced')">🎓 Advanced</button>
+        </div>
+        <div class="search-wrap" style="margin-left:auto">
+          <span class="search-icon">🔍</span>
+          <input type="search" class="search-input" id="search-input" placeholder="Search..." aria-label="Search playbook content">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container" style="padding-top:var(--s4);padding-bottom:var(--s7)">
+      <div id="content-grid">
+          <!-- ── LIGHTING L1 ─────────────────────────────── -->
+          <div class="pb-section-header first" id="lighting" data-category="lighting">
+            <div class="card-tag lighting">💡 Lighting · L1</div>
+            <span class="pb-section-title">Lighting for Live Events</span>
+            <span class="pb-section-count" id="count-lighting"></span>
+          </div>
+          <div class="carousel-outer reveal" data-category="lighting" style="margin-bottom:var(--s5)">
+            <div class="carousel-nav">
+              <span class="carousel-title t-label">All Sections — Swipe to Explore</span>
+              <div style="display:flex;align-items:center;gap:var(--s2)">
+                <span class="carousel-count"></span>
+                <div class="carousel-controls">
+                  <button class="carousel-btn" data-carousel-prev aria-label="Previous">←</button>
+                  <button class="carousel-btn" data-carousel-next aria-label="Next">→</button>
+                </div>
+              </div>
+            </div>
+            <div class="carousel" id="carousel-lighting" role="list"></div>
+          </div>
+
+          <!-- ── LIGHTING ADVANCED L2 ────────────────────── -->
+          <div class="pb-section-header" id="lighting-advanced" data-category="advanced">
+            <div class="card-tag advanced">🔧 Advanced · L2</div>
+            <span class="pb-section-title">Sections 29–40 — Previz, Kinetics, Show Control</span>
+            <span class="pb-section-count" id="count-advanced"></span>
+          </div>
+          <div class="carousel-outer reveal" data-category="advanced" style="margin-bottom:var(--s5)">
+            <div class="carousel-nav">
+              <span class="carousel-title t-label">Advanced Lighting — Swipe to Explore</span>
+              <div style="display:flex;align-items:center;gap:var(--s2)">
+                <span class="carousel-count"></span>
+                <div class="carousel-controls">
+                  <button class="carousel-btn" data-carousel-prev aria-label="Previous">←</button>
+                  <button class="carousel-btn" data-carousel-next aria-label="Next">→</button>
+                </div>
+              </div>
+            </div>
+            <div class="carousel" id="carousel-lighting-adv" role="list"></div>
+          </div>
+
+          <!-- ── SOUND S1 ─────────────────────────────────── -->
+          <div class="pb-section-header" id="sound" data-category="sound">
+            <div class="card-tag sound">🔊 Sound · S1</div>
+            <span class="pb-section-title">Live Sound Engineer Guide</span>
+            <span class="pb-section-count" id="count-sound"></span>
+          </div>
+          <div class="carousel-outer reveal" data-category="sound" style="margin-bottom:var(--s5)">
+            <div class="carousel-nav">
+              <span class="carousel-title t-label">All Sections — Swipe to Explore</span>
+              <div style="display:flex;align-items:center;gap:var(--s2)">
+                <span class="carousel-count"></span>
+                <div class="carousel-controls">
+                  <button class="carousel-btn" data-carousel-prev aria-label="Previous">←</button>
+                  <button class="carousel-btn" data-carousel-next aria-label="Next">→</button>
+                </div>
+              </div>
+            </div>
+            <div class="carousel" id="carousel-sound" role="list"></div>
+          </div>
+
+          <!-- ── SOUND ADDITIONS ─────────────────────────── -->
+          <div class="pb-section-header" id="sound-advanced" data-category="rf">
+            <div class="card-tag rf">📡 WMAS · Immersive · IEM</div>
+            <span class="pb-section-title">Sound Playbook Additions</span>
+            <span class="pb-section-count" id="count-rf"></span>
+          </div>
+          <div class="carousel-outer reveal" data-category="rf" style="margin-bottom:var(--s5)">
+            <div class="carousel-nav">
+              <span class="carousel-title t-label">WMAS, Immersive &amp; Personal Monitoring</span>
+              <div style="display:flex;align-items:center;gap:var(--s2)">
+                <span class="carousel-count"></span>
+                <div class="carousel-controls">
+                  <button class="carousel-btn" data-carousel-prev aria-label="Previous">←</button>
+                  <button class="carousel-btn" data-carousel-next aria-label="Next">→</button>
+                </div>
+              </div>
+            </div>
+            <div class="carousel" id="carousel-sound-adv" role="list"></div>
+          </div>
+
+          <!-- ── SOUND ADVANCED ADDITIONS ──────────────────── -->
+          <div class="pb-section-header" id="sound-advanced2" data-category="advanced">
+            <div class="card-tag advanced">🎓 Advanced · Sound</div>
+            <span class="pb-section-title">Milan · Hybrid Events · Loudness · Pin 1 · AI Trends · Glossary</span>
+            <span class="pb-section-count" id="count-sound-adv2"></span>
+          </div>
+          <div class="carousel-outer reveal" data-category="advanced" style="margin-bottom:var(--s5)">
+            <div class="carousel-nav">
+              <span class="carousel-title t-label">Sound Playbook Additions — Part 2</span>
+              <div style="display:flex;align-items:center;gap:var(--s2)">
+                <span class="carousel-count"></span>
+                <div class="carousel-controls">
+                  <button class="carousel-btn" data-carousel-prev aria-label="Previous">←</button>
+                  <button class="carousel-btn" data-carousel-next aria-label="Next">→</button>
+                </div>
+              </div>
+            </div>
+            <div class="carousel" id="carousel-sound-adv2" role="list"></div>
+          </div>
+
+          <!-- CTA -->
+          <div style="text-align:center;padding:var(--s4) 0;border-top:2px solid var(--border)">
+            <p class="t-display" style="margin-bottom:var(--s3)">Ready to test<br><span class="t-gradient">what you know?</span></p>
+            <div style="display:flex;gap:var(--s2);justify-content:center;flex-wrap:wrap">
+              <a href="game.html" class="btn btn-accent btn-xl btn-magnetic">⚡ Take the Quiz</a>
+              <a href="daily.html" class="btn btn-outline btn-xl">🌅 Daily Challenge</a>
+            </div>
+          </div>
+        </div>
+    </div>
+  </main>
+
+  <footer style="background:var(--ink);color:var(--bg);padding:var(--s4) 0;" role="contentinfo">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--s2)">
+      <div class="nav-logo" style="color:var(--bg)"><span class="nav-logo-dot"></span><span>S&amp;L</span></div>
+      <div style="display:flex;gap:var(--s3)">
+        <a href="index.html" class="nav-link" style="color:rgba(245,242,237,0.7)">Home</a>
+        <a href="game.html" class="nav-link" style="color:rgba(245,242,237,0.7)">Game</a>
+        <a href="daily.html" class="nav-link" style="color:rgba(245,242,237,0.7)">Daily</a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast-container"></div>
+
+  <!-- Modal for full section view -->
+  <div id="section-modal" style="display:none;position:fixed;inset:0;z-index:9500;background:rgba(10,10,10,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:var(--s4)" role="dialog" aria-modal="true" aria-label="Section details">
+    <div style="background:var(--surface);border-radius:var(--r-xl);max-width:720px;width:100%;max-height:85vh;display:flex;flex-direction:column;border:2px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--s3) var(--s4);border-bottom:1px solid var(--border)">
+        <div id="modal-title" class="t-title"></div>
+        <button onclick="closeModal()" class="btn btn-ghost btn-sm" aria-label="Close modal">✕</button>
+      </div>
+      <div id="modal-body" style="flex:1;overflow-y:auto;padding:var(--s4);scrollbar-width:thin;scrollbar-color:var(--acc1) transparent"></div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/sounds.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // ─── PLAYBOOK PAGE INIT ──────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      buildAllCarousels();
+      initSearch();
+      handleHashNav();
+      // Re-init after content is built — buttons query items dynamically
+      App.initCarousels();
+      // Force-reveal any .reveal elements already in (or near) the viewport.
+      // initScrollObserver() runs before buildAllCarousels() so it sees empty
+      // carousels that don't meet the intersection threshold; we fix that here.
+      requestAnimationFrame(() => {
+        $$('.reveal').forEach(el => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight && rect.bottom > 0) {
+            el.classList.add('visible');
+          }
+        });
+      });
+    });
+
+    function buildAllCarousels() {
+      buildCarousel('carousel-lighting', CONTENT.lighting, true);
+      buildCarousel('carousel-lighting-adv', CONTENT.lighting_advanced, true);
+      buildCarousel('carousel-sound', CONTENT.sound, true);
+      buildCarousel('carousel-sound-adv', CONTENT.sound_advanced, true);
+      buildCarousel('carousel-sound-adv2', CONTENT.sound_advanced2, true);
+
+      // Update counts
+      const counts = [
+        ['count-lighting', CONTENT.lighting],
+        ['count-advanced', CONTENT.lighting_advanced],
+        ['count-sound', CONTENT.sound],
+        ['count-rf', CONTENT.sound_advanced],
+        ['count-sound-adv2', CONTENT.sound_advanced2]
+      ];
+      counts.forEach(([id, arr]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = `${arr.length} sections`;
+      });
+    }
+
+    function buildCarousel(carouselId, sections, showFullBtn) {
+      const carousel = document.getElementById(carouselId);
+      if (!carousel) return;
+
+      sections.forEach(section => {
+        const item = document.createElement('div');
+        item.className = 'carousel-item';
+        item.dataset.sectionId = section.id;
+        item.dataset.category = section.tag;
+        item.setAttribute('role', 'listitem');
+
+        const lines = section.content.split('\n').filter(l => l.trim());
+        const preview = lines.slice(0, 10).map(l => `<p style="margin-bottom:0.35rem">${escHtml(l)}</p>`).join('');
+        const hasMore = lines.length > 10;
+
+        item.innerHTML = `
+          <div class="card card-content" style="height:var(--carousel-h);" id="${section.id}">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s1);margin-bottom:var(--s2)">
+              <div class="card-tag ${section.tag}" style="margin-bottom:0;font-size:0.65rem">${section.tag.toUpperCase()} · §${section.section}</div>
+              <div class="t-label" style="font-size:0.6rem;color:var(--ink-dim);text-align:right;white-space:nowrap">${section.source}</div>
+            </div>
+            <div class="t-title" style="font-size:0.9375rem;margin-bottom:var(--s2);line-height:1.3">${escHtml(section.title)}</div>
+            <div class="card-content-body t-small" style="color:var(--ink-mid)">
+              ${preview}
+              ${hasMore ? '<p style="color:var(--acc1);font-weight:700;margin-top:0.5rem">↓ Scroll for more...</p>' : ''}
+            </div>
+            ${showFullBtn ? `<button class="btn btn-ghost btn-sm" style="margin-top:var(--s1);padding-left:0;align-self:flex-start" onclick="openModal('${section.id}')" aria-label="View full section: ${escAttr(section.title)}">View full ↗</button>` : ''}
+          </div>
+        `;
+        carousel.appendChild(item);
+      });
+    }
+
+    function buildSidebar() {
+      const groups = [
+        { id: 'sidebar-lighting', data: CONTENT.lighting },
+        { id: 'sidebar-lighting-adv', data: CONTENT.lighting_advanced },
+        { id: 'sidebar-sound', data: CONTENT.sound },
+        { id: 'sidebar-sound-adv', data: CONTENT.sound_advanced }
+      ];
+
+      groups.forEach(({ id, data }) => {
+        const nav = document.getElementById(id);
+        if (!nav) return;
+        data.forEach(section => {
+          const item = document.createElement('a');
+          item.className = 'sidebar-item';
+          item.href = `#${section.id}`;
+          item.innerHTML = `<span class="sidebar-item-dot"></span><span>${escHtml(section.title)}</span>`;
+          item.addEventListener('click', e => {
+            e.preventDefault();
+            const card = document.getElementById(section.id);
+            if (card) {
+              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              AudioEngine.play('navigate');
+              $$('.sidebar-item.active').forEach(el => el.classList.remove('active'));
+              item.classList.add('active');
+            }
+          });
+          nav.appendChild(item);
+        });
+      });
+    }
+
+    function initSearch() {
+      const input = document.getElementById('search-input');
+      if (!input) return;
+
+      input.addEventListener('input', () => {
+        const q = input.value.toLowerCase().trim();
+        const allItems = $$('.carousel-item');
+
+        if (!q) {
+          allItems.forEach(item => item.style.display = '');
+          $$('.carousel-outer').forEach(outer => outer.style.display = '');
+          return;
+        }
+
+        allItems.forEach(item => {
+          const text = item.textContent.toLowerCase();
+          item.style.display = text.includes(q) ? '' : 'none';
+        });
+
+        // Show/hide carousel rows if all items hidden
+        $$('.carousel-outer').forEach(outer => {
+          const visible = [...outer.querySelectorAll('.carousel-item')].some(i => i.style.display !== 'none');
+          outer.style.display = visible ? '' : 'none';
+        });
+      });
+    }
+
+    function filterContent(filter) {
+      $$('[data-filter]').forEach(btn => btn.classList.toggle('active', btn.dataset.filter === filter));
+      AudioEngine.play('click');
+
+      // Map each filter to the first section anchor it should scroll to
+      const sectionMap = {
+        lighting: 'lighting',
+        advanced: 'lighting-advanced',
+        sound:    'sound',
+        rf:       'sound-advanced'
+      };
+
+      $$('[data-category]:not(.carousel-item)').forEach(row => {
+        const show = filter === 'all' || row.dataset.category === filter;
+        row.style.display = show ? '' : 'none';
+        // Sections that were never scrolled into view may still be at opacity:0
+        // (IntersectionObserver never fired for them). Force-reveal them now.
+        if (show) row.classList.add('visible');
+      });
+
+      // Scroll to the first visible section for this filter, or back to top for All
+      if (filter !== 'all') {
+        const target = document.getElementById(sectionMap[filter]);
+        if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    const ALL_SECTIONS = [
+      ...CONTENT.lighting,
+      ...CONTENT.lighting_advanced,
+      ...CONTENT.sound,
+      ...CONTENT.sound_advanced,
+      ...CONTENT.sound_advanced2
+    ];
+
+    function openModal(sectionId) {
+      const section = ALL_SECTIONS.find(s => s.id === sectionId);
+      if (!section) return;
+
+      const modal = document.getElementById('section-modal');
+      const title = document.getElementById('modal-title');
+      const body = document.getElementById('modal-body');
+
+      title.innerHTML = `<span class="card-tag ${section.tag}">${section.tag}</span> &nbsp; ${escHtml(section.title)}`;
+
+      const html = section.content.split('\n').map(line => {
+        if (!line.trim()) return '<br>';
+        if (line.startsWith('•')) return `<p style="padding-left:1rem;color:var(--ink-mid);margin-bottom:0.3rem">${escHtml(line)}</p>`;
+        if (/^\d+\./.test(line)) return `<p style="padding-left:1rem;color:var(--ink-mid);margin-bottom:0.3rem">${escHtml(line)}</p>`;
+        return `<p style="margin-bottom:0.4rem">${escHtml(line)}</p>`;
+      }).join('');
+
+      body.innerHTML = html;
+      modal.style.display = 'flex';
+      AudioEngine.play('whoosh');
+
+      // Trap focus inside modal
+      modal.focus && modal.focus();
+    }
+
+    function closeModal() {
+      document.getElementById('section-modal').style.display = 'none';
+      AudioEngine.play('click');
+    }
+
+    // Close modal on backdrop click
+    document.getElementById('section-modal')?.addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+
+    // Close modal on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    function handleHashNav() {
+      if (window.location.hash) {
+        const target = document.querySelector(window.location.hash);
+        if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 800);
+      }
+    }
+
+    // Escape HTML
+    function escHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function escAttr(str) {
+      return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Soundscape & Light — The ultimate interactive adventure playbook for live sound and lighting professionals.">
+  <title>S&L — Soundscape & Light</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loader-text">LOADING PLAYBOOK...</div>
+    <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  </div>
+
+  <!-- Scroll Progress -->
+  <div id="scroll-progress"></div>
+
+  <!-- Back to Top -->
+  <button id="back-top" aria-label="Back to top">↑</button>
+
+  <!-- Sound Toggle -->
+  <button id="sound-toggle" style="position:fixed;top:88px;right:1rem;z-index:9000;background:var(--surface);border:2px solid var(--border);border-radius:var(--r-full);width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;" aria-label="Toggle sound">🔊</button>
+
+  <!-- Particle Canvas -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="nav-logo" aria-label="S&L Home">
+      <span class="nav-logo-dot"></span>
+      <span>S&amp;L</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="playbook.html" class="nav-link">Playbook</a>
+      <a href="game.html" class="nav-link">Game</a>
+      <a href="daily.html" class="nav-link">Daily</a>
+    </div>
+    <button class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="nav-mobile" role="dialog" aria-label="Mobile navigation">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="playbook.html" class="nav-link">Playbook</a>
+    <a href="game.html" class="nav-link">Game</a>
+    <a href="daily.html" class="nav-link">Daily</a>
+  </div>
+
+  <!-- ── HERO ────────────────────────────────────────── -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="container hero-content">
+      <div class="hero-eyebrow">
+        <div class="hero-badge">Pro Playbook</div>
+        <div class="hero-live">
+          <span class="hero-live-dot"></span>
+          <span data-theme-emoji>⚡</span>
+          <span data-theme-name>Loading...</span>
+        </div>
+      </div>
+
+      <div class="hero-title">
+        <h1 class="t-hero">
+          <span class="glitch" data-text="SOUND">SOUND</span><br>
+          <span class="t-outline">SCOPE</span>
+          <span class="t-gradient">&amp;</span><br>
+          <span class="glitch" data-text="LIGHT">LIGHT</span>
+        </h1>
+      </div>
+
+      <p class="hero-sub">
+        The <strong>wildest</strong> pro-grade adventure playbook for live sound &amp; lighting. 
+        Quiz yourself, explore, and level up — every day.
+      </p>
+
+      <div class="hero-actions">
+        <a href="game.html" class="btn btn-accent btn-xl btn-magnetic" aria-label="Start the quiz game">
+          ⚡ Play Now
+        </a>
+        <a href="daily.html" class="btn btn-outline btn-xl btn-magnetic" aria-label="Today's daily challenge">
+          🌅 Daily Challenge
+        </a>
+        <a href="playbook.html" class="btn btn-ghost btn-xl" aria-label="Browse the playbook">
+          📖 Explore
+        </a>
+      </div>
+
+      <div class="hero-stats stagger">
+        <div>
+          <div class="hero-stat-num" data-count-to="35">0</div>
+          <div class="hero-stat-label">Quiz Questions</div>
+        </div>
+        <div>
+          <div class="hero-stat-num" data-count-to="25">0</div>
+          <div class="hero-stat-label">Rapid Fire Rounds</div>
+        </div>
+        <div>
+          <div class="hero-stat-num" data-count-to="28">0</div>
+          <div class="hero-stat-label">Quotes</div>
+        </div>
+        <div>
+          <div class="hero-stat-num" data-count-to="30">0</div>
+          <div class="hero-stat-label">Content Sections</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating decorations -->
+    <div class="hero-float" style="top:15%;right:8%;font-size:3rem;animation-delay:0s">🎛️</div>
+    <div class="hero-float" style="top:35%;right:4%;font-size:2rem;animation-delay:1s">📡</div>
+    <div class="hero-float" style="top:65%;right:12%;font-size:2.5rem;animation-delay:2s">💡</div>
+    <div class="hero-float" style="top:80%;right:6%;font-size:1.8rem;animation-delay:0.5s">🎤</div>
+  </section>
+
+  <!-- ── MARQUEE ─────────────────────────────────────── -->
+  <div class="marquee-wrap" role="marquee" aria-label="Key facts ticker">
+    <div class="marquee-track" id="marquee-track">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- ── QOTD ───────────────────────────────────────── -->
+  <section class="section" aria-labelledby="qotd-heading">
+    <div class="container">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-label">Quote of the Day</div>
+          <h2 class="t-display" id="qotd-heading">Today's <span class="t-gradient">Wisdom</span></h2>
+        </div>
+        <a href="daily.html" class="btn btn-outline">See Daily →</a>
+      </div>
+      <div id="qotd-container" class="reveal"></div>
+    </div>
+  </section>
+
+  <!-- ── MODE SELECTOR ──────────────────────────────── -->
+  <section class="section" aria-labelledby="modes-heading">
+    <div class="container">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-label">Choose Your Adventure</div>
+          <h2 class="t-display" id="modes-heading">How Do You<br><span class="t-gradient">Want to Train?</span></h2>
+        </div>
+      </div>
+      <div class="mode-grid stagger" role="list">
+        <a href="game.html?mode=classic" class="mode-card card-tilt" role="listitem" aria-label="Classic Quiz mode">
+          <div class="mode-icon">🎯</div>
+          <div class="t-title">Classic Quiz</div>
+          <p class="t-small" style="color:var(--ink-dim);text-align:center">10 questions, 15 seconds each, multiple choice. Beat your score.</p>
+          <div class="btn btn-primary btn-sm" style="margin-top:auto">Play Classic</div>
+        </a>
+        <a href="game.html?mode=rapid" class="mode-card card-tilt" role="listitem" aria-label="Rapid Fire mode">
+          <div class="mode-icon">⚡</div>
+          <div class="t-title">Rapid Fire</div>
+          <p class="t-small" style="color:var(--ink-dim);text-align:center">True or False. 8 seconds. No mercy. Blazing fast knowledge test.</p>
+          <div class="btn btn-accent btn-sm" style="margin-top:auto">Start Rapid</div>
+        </a>
+        <a href="daily.html" class="mode-card card-tilt" role="listitem" aria-label="Daily Challenge mode">
+          <div class="mode-icon">🌅</div>
+          <div class="t-title">Daily Challenge</div>
+          <p class="t-small" style="color:var(--ink-dim);text-align:center">New deck every day. Quote, rapid fire, 10 questions. Claim your badge.</p>
+          <div class="btn btn-outline btn-sm" style="margin-top:auto">Daily Mode</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TOPICS PREVIEW ─────────────────────────────── -->
+  <section class="section island-dark" aria-labelledby="topics-heading">
+    <div class="container">
+      <div class="section-label">What You'll Learn</div>
+      <h2 class="t-display" id="topics-heading" style="color:var(--dark-ink);margin-bottom:var(--s4)">
+        Built From <span class="t-gradient">4 Pro Playbooks</span>
+      </h2>
+
+      <div class="grid-2 stagger" style="margin-bottom:var(--s5)">
+        <div>
+          <div class="card-tag lighting" style="margin-bottom:var(--s2)">Lighting</div>
+          <div class="t-title" style="color:var(--dark-ink);margin-bottom:var(--s2)">Lighting for Live Events</div>
+          <p class="t-body" style="color:rgba(245,242,237,0.7)">Core philosophy, concerts, corporate, theatre, broadcast, DMX, fixture categories, color theory, camera lighting, programming, consoles, previz, kinetic, show control, sustainability, and more.</p>
+        </div>
+        <div>
+          <div class="card-tag sound" style="margin-bottom:var(--s2)">Sound</div>
+          <div class="t-title" style="color:var(--dark-ink);margin-bottom:var(--s2)">Live Sound Engineer Playbook</div>
+          <p class="t-body" style="color:rgba(245,242,237,0.7)">Roles, pre-production, gain structure, microphones, wireless, PA design, subwoofers, system tuning, SPL compliance, FOH mixing, monitor engineering, networked audio, and playback.</p>
+        </div>
+        <div>
+          <div class="card-tag rf" style="margin-bottom:var(--s2)">RF / WMAS</div>
+          <div class="t-title" style="color:var(--dark-ink);margin-bottom:var(--s2)">WMAS & RF Innovations</div>
+          <p class="t-body" style="color:rgba(245,242,237,0.7)">WMAS regulatory approval, Sennheiser Spectera, spectrum efficiency, bidirectional bodypacks, coexistence with conventional systems, and new RF workflow implications.</p>
+        </div>
+        <div>
+          <div class="card-tag wmas" style="margin-bottom:var(--s2)">Immersive / Advanced</div>
+          <div class="t-title" style="color:var(--dark-ink);margin-bottom:var(--s2)">Spatial Audio & Personal Monitoring</div>
+          <p class="t-body" style="color:rgba(245,242,237,0.7)">L-ISA, d&b Soundscape, Spacemap Go, object-based mixing, KLANG 3D personal monitoring, Aviom, active acoustic enhancement, and performer tracking.</p>
+        </div>
+      </div>
+
+      <div style="text-align:center">
+        <a href="playbook.html" class="btn btn-accent btn-lg btn-magnetic">Explore Full Playbook →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PREVIEW CAROUSEL — LIGHTING ───────────────────── -->
+  <section class="section" aria-labelledby="lighting-preview-heading">
+    <div class="container">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-label">Lighting</div>
+          <h2 class="t-display" id="lighting-preview-heading">Key<br><span class="t-gradient">Lighting Concepts</span></h2>
+        </div>
+        <a href="playbook.html#lighting" class="btn btn-outline">All Lighting →</a>
+      </div>
+      <div class="carousel-outer reveal">
+        <div class="carousel-nav">
+          <span class="carousel-title">Lighting Playbook Highlights</span>
+          <div style="display:flex;align-items:center;gap:var(--s2)">
+            <span class="carousel-count"></span>
+            <div class="carousel-controls">
+              <button class="carousel-btn" data-carousel-prev aria-label="Previous">←</button>
+              <button class="carousel-btn" data-carousel-next aria-label="Next">→</button>
+            </div>
+          </div>
+        </div>
+        <div class="carousel" id="lighting-carousel" role="list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PREVIEW CAROUSEL — SOUND ──────────────────────── -->
+  <section class="section" style="background:var(--surface-2)" aria-labelledby="sound-preview-heading">
+    <div class="container">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-label">Sound</div>
+          <h2 class="t-display" id="sound-preview-heading">Essential<br><span class="t-gradient">Sound Engineering</span></h2>
+        </div>
+        <a href="playbook.html#sound" class="btn btn-outline">All Sound →</a>
+      </div>
+      <div class="carousel-outer reveal">
+        <div class="carousel-nav">
+          <span class="carousel-title">Sound Playbook Highlights</span>
+          <div style="display:flex;align-items:center;gap:var(--s2)">
+            <span class="carousel-count"></span>
+            <div class="carousel-controls">
+              <button class="carousel-btn" data-carousel-prev aria-label="Previous">←</button>
+              <button class="carousel-btn" data-carousel-next aria-label="Next">→</button>
+            </div>
+          </div>
+        </div>
+        <div class="carousel" id="sound-carousel" role="list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ACHIEVEMENTS TEASER ────────────────────────────── -->
+  <section class="section" aria-labelledby="achievements-heading">
+    <div class="container">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-label">Progress</div>
+          <h2 class="t-display" id="achievements-heading">Earn Your<br><span class="t-gradient">Badges</span></h2>
+        </div>
+      </div>
+      <div class="badge-grid reveal" id="badge-preview"></div>
+      <div style="margin-top:var(--s4);text-align:center" class="reveal">
+        <a href="game.html" class="btn btn-primary btn-lg btn-magnetic">Start Earning Badges →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────────────────── -->
+  <footer style="background:var(--ink);color:var(--bg);padding:var(--s5) 0;" role="contentinfo">
+    <div class="container" style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:var(--s3)">
+      <div>
+        <div class="nav-logo" style="color:var(--bg);margin-bottom:var(--s1)">
+          <span class="nav-logo-dot"></span>
+          <span>S&amp;L</span>
+        </div>
+        <p class="t-small" style="color:rgba(245,242,237,0.5)">Soundscape & Light — Pro Playbook</p>
+      </div>
+      <div style="display:flex;gap:var(--s3)">
+        <a href="index.html" class="nav-link" style="color:rgba(245,242,237,0.7)">Home</a>
+        <a href="playbook.html" class="nav-link" style="color:rgba(245,242,237,0.7)">Playbook</a>
+        <a href="game.html" class="nav-link" style="color:rgba(245,242,237,0.7)">Game</a>
+        <a href="daily.html" class="nav-link" style="color:rgba(245,242,237,0.7)">Daily</a>
+      </div>
+      <p class="t-small" style="color:rgba(245,242,237,0.4)">Built for the pros. No AI fluff. Real content.</p>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/sounds.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // ─── INDEX PAGE INIT ─────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      // Particles
+      App.initParticles('particle-canvas');
+
+      // Marquee
+      App.buildMarquee('#marquee-track', MARQUEE_FACTS);
+
+      // QOTD
+      App.renderQOTD('#qotd-container');
+
+      // Build lighting carousel
+      buildPreviewCarousel('lighting-carousel', CONTENT.lighting.slice(0, 8), 'lighting');
+
+      // Build sound carousel
+      buildPreviewCarousel('sound-carousel', CONTENT.sound.slice(0, 8), 'sound');
+
+      // Badge preview
+      renderBadgePreview();
+
+      // Re-init carousels after content is built
+      App.initCarousels();
+    });
+
+    function buildPreviewCarousel(carouselId, sections, type) {
+      const carousel = document.getElementById(carouselId);
+      if (!carousel) return;
+
+      const shuffled = Engine.getHourlyContentOrder(sections);
+
+      shuffled.forEach(section => {
+        const item = document.createElement('div');
+        item.className = 'carousel-item';
+        item.setAttribute('role', 'listitem');
+
+        const lines = section.content.split('\n').filter(l => l.trim()).slice(0, 8);
+
+        item.innerHTML = `
+          <div class="card card-content card-tilt" style="height:100%">
+            <div class="card-tag ${section.tag}">${section.tag.toUpperCase()} · §${section.section}</div>
+            <div class="t-title" style="margin-bottom:var(--s2);font-size:1rem">${section.title}</div>
+            <div class="card-content-body t-small" style="color:var(--ink-mid)">
+              ${lines.map(l => `<p style="margin-bottom:0.4rem">${l}</p>`).join('')}
+            </div>
+            <a href="playbook.html#${section.id}" class="btn btn-ghost btn-sm" style="margin-top:var(--s2);padding-left:0;align-self:flex-start" aria-label="Read full section: ${section.title}">Read full →</a>
+          </div>
+        `;
+        carousel.appendChild(item);
+      });
+
+      // Re-init tilt for new cards
+      App.initParticles && setTimeout(() => initCardTilt(), 100);
+    }
+
+    function renderBadgePreview() {
+      const container = document.getElementById('badge-preview');
+      if (!container) return;
+
+      const state = Engine.StorageManager.load();
+
+      ACHIEVEMENTS.slice(0, 8).forEach(ach => {
+        const earned = state.earnedAchievements.includes(ach.id);
+        const badge = document.createElement('div');
+        badge.className = `badge${earned ? ' earned' : ''}`;
+        badge.innerHTML = `
+          <div class="badge-icon">${ach.icon}</div>
+          <span class="badge-name">${ach.name}</span>
+        `;
+        badge.title = ach.desc;
+        container.appendChild(badge);
+      });
+    }
+
+    function initCardTilt() {
+      document.querySelectorAll('.card-tilt').forEach(card => {
+        if (card._tiltInit) return;
+        card._tiltInit = true;
+        card.addEventListener('mousemove', e => {
+          const rect = card.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+          card.style.transform = `perspective(600px) rotateX(${-y * 10}deg) rotateY(${x * 10}deg) translateZ(8px)`;
+        }, { passive: true });
+        card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+      });
+    }
+
+    // Re-init tilt after carousels render
+    setTimeout(initCardTilt, 500);
+  </script>
+</body>
+</html>
